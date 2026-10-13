@@ -1,79 +1,43 @@
 // Elementi del DOM
-let inputSecondi = document.getElementById("inputSecondi");
-let btnStart = document.getElementById("btnStart");
-let btnPausa = document.getElementById("btnPausa");
-let btnReset = document.getElementById("btnReset");
-let display = document.getElementById("display");
+let remainingTime = document.querySelector("#remainingTime");
+let startBtn = document.querySelector("#startBtn");
+let countdownInput = document.querySelector("#countdown-input");
+let resetBtn = document.querySelector("#resetBtn");
+let stopBtn = document.querySelector("#stopBtn");
 
 // Variabili di controllo
-let tempoRimanente = 0;
-let intervallo = null;
-let inPausa = false;
+let interval;
+let counter;
+let remainingSeconds = 0;
 
-// Funzione che aggiorna il display
-function aggiornaDisplay() {
-    display.innerText = tempoRimanente;
-}
+startBtn.addEventListener(`click`, ()=>{
+    clearInterval(interval)
+    counter = countdownInput.value // secondi che inserirà l'utente
 
-// BOTTONE AVVIA / RIPRENDI
-btnStart.addEventListener("click", function () {
-
-    // Se il timer è già in esecuzione, non fare nulla
-    if (intervallo !== null) {
-        return;
+    if(remainingSeconds !== 0){
+        counter = remainingSeconds;
     }
 
-    // Se non è in pausa, prendo il valore dall'input
-    if (inPausa === false) {
-        let secondi = Number(inputSecondi.value);
+    interval = setInterval(() => {
+        if(counter < 0){
+            clearInterval(interval)
+            remainingTime.innerHTML = `Tempo scaduto`
 
-        if (secondi <= 0 || isNaN(secondi)) {
-            alert("Inserisci un numero di secondi valido");
-            return;
+        }else{
+            remainingTime.innerHTML = counter
+            counter --
         }
 
-        tempoRimanente = secondi;
-    }
-
-    // Avvio il countdown
-    intervallo = setInterval(function () {
-        tempoRimanente = tempoRimanente - 1;
-        aggiornaDisplay();
-
-        // Quando arriva a zero
-        if (tempoRimanente <= 0) {
-            clearInterval(intervallo);
-            intervallo = null;
-            inPausa = false;
-            display.innerText = "Tempo scaduto!";
-        }
     }, 1000);
+})
 
-    inPausa = false;
-});
+stopBtn.addEventListener(`click`, ()=>{
+    clearInterval(interval)
+    remainingSeconds = counter
+})
 
-// BOTTONE PAUSA
-btnPausa.addEventListener("click", function () {
-
-    if (intervallo !== null) {
-        clearInterval(intervallo);
-        intervallo = null;
-        inPausa = true;
-    }
-});
-
-// BOTTONE RESET
-btnReset.addEventListener("click", function () {
-
-    // Fermo il timer se è attivo
-    if (intervallo !== null) {
-        clearInterval(intervallo);
-        intervallo = null;
-    }
-
-    // Azzero tutto
-    tempoRimanente = 0;
-    inPausa = false;
-    inputSecondi.value = "";
-    display.innerText = "0";
-});
+resetBtn.addEventListener(`click`, ()=>{
+    countdownInput.value = ``
+    clearInterval(interval)
+    remainingTime.innerHTML = ``
+})
