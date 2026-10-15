@@ -14,22 +14,17 @@ startBtn.addEventListener(`click`, ()=>{
     clearInterval(interval)
     counter = countdownInput.value // secondi che inserirà l'utente
 
-    if(remainingSeconds !== 0){
-        counter = remainingSeconds;
-    }
-
     interval = setInterval(() => {
-        if(counter < 0){
-            clearInterval(interval)
-            remainingTime.innerHTML = `Tempo scaduto`
 
-        }else{
-            remainingTime.innerHTML = counter
-            counter --
-        }
-
+    if(counter < 0){
+        clearInterval(interval)
+         remainingTime.innerHTML = `tempo scaduto`
+    } else{
+        remainingTime.innerHTML = counter
+        counter --
+    }
     }, 1000);
-})
+    })
 
 stopBtn.addEventListener(`click`, ()=>{
     clearInterval(interval)
